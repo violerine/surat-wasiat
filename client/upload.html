@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+      <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Upload</title>
+</head>
+<body>
+    <div id="upload">
+        <div class="form-group">
+                <label for="exampleFormControlFile1">Example file input</label>
+                <input type="file" @change="onFileChanged" required>
+                <button @click="onUpload">Upload!</button>
+        <div class="upload-image" v-if="image">
+                <img :src="image" alt="">
+        </div>
+        </div>
+
+    </div>
+
+<script>
+    const upload = new Vue({
+    el: "#upload",
+    created: function () {
+      this.getImage()
+    },
+    data:{
+        image: null,
+        formdata: new FormData(),
+        pictures: []
+    },
+    methods: {
+      onFileChanged (event) {
+        this.image = event.target.files[0]
+        console.log("masuk sini ga")
+      },
+      onUpload() {
+        var dapetToken=window.localStorage.getItem('token');
+        // upload file
+        this.formdata.set('item', this.image)
+        axios.post('http://35.198.212.156/api/image', this.formdata)
+        .then(response => {
+          this.getImage()
+          console.log('');
+        })
+        .catch(err => {
+          console.log(err);
+        })
+  
+      },
+      getImage(){
+        axios.get('http://35.198.212.156/api/image')
+        .then(({data})=>{
+        console.log(this.pictures)
+          this.pictures = data.data
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      },
+    }
+  })
+  
+</script>
+</body>
+</html>

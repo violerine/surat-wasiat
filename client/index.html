@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+
+<style>
+    .container{
+        padding-top: 40px !important
+    }
+</style>
+</head>
+<body>
+
+<div id="inputform" >
+    <h1 class="container">Input form</h1>
+        
+            <div class ="container">
+                <div class="form-group ">
+                  <label >Name</label>
+                  <input v-model="name" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter Name" required>
+                </div>
+                <div class="form-group ">
+                        <label >Email address</label>
+                        <input v-model="email" type="email" class="form-control"  aria-describedby="emailHelp" placeholder="Enter email" required>
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                      </div>
+
+                <!-- <div class="form-group">
+                        <label for="exampleFormControlFile1">Example file input</label>
+                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                </div> -->
+                <input  @click="executeinput" type="submit" class="btn btn-primary"></input>
+                <p> {{errormessage}} </p>
+            </div>
+    
+
+</div>
+
+
+<script>
+    const app = new Vue({
+    el: '#inputform',
+    data:{
+        name:'',
+        email:'',
+        errormessage:''
+    },
+    routes:[
+        {
+            path:'/upload.html',
+            name:'uploadpage'
+        }
+    ],
+    methods: {
+      executeinput(){
+          axios.post('http://35.198.212.156/request-token',{name:this.name, email:this.email})
+          .then(({data})=>{
+              if(data.user.uid!==undefined){
+                  window.localStorage.setItem('token',data.user.uid)
+                  alert('uidnya dapet di console')
+                console.log(data.user.uid)
+              }
+          })
+          .catch(err=>{
+              this.errormessage='Input not valid'
+          })
+      }
+    }
+  })
+</script>
+
+
+</body>
+</html>
